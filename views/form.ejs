@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1>New Message</h1>
+    <form method="POST" action="/new">
+      <div>
+        <label for="user">Your Name:</label>
+        <input type="text" id="user" name="messageUser" required />
+      </div>
+      <br />
+      <div>
+        <label for="message">Message:</label>
+        <textarea name="messageText" id="message" required></textarea>
+      </div>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <br />
+    <a href="/">Back to Board</a>
+  </body>
+</html>

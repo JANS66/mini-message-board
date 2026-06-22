@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-  </head>
-  <body>
-    <h1><%= message %></h1>
-    <p>Your Express and EJS setup is working perfectly!</p>
-  </body>
+</head>
+<body>
+    <h1><%= title %></h1>
+    
+    <a href="/new">Write a New Message</a>
+    <hr>
+
+    <% messages.forEach(message => { %>
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <p><strong><%= message.user %>:</strong> <%= message.text %></p>
+            <small><%= message.added.toLocaleString() %></small>
+        </div>
+    <% }) %>
+</body>
 </html>
