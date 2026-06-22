@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Message Details</h1>
+        <a href="/" class="btn btn-secondary">← Back to Board</a>
+      </header>
+
+      <main class="form-card">
+        <div
+          style="
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+          "
+        >
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">
+            Sent by
+          </p>
+          <h2 style="margin: 0; color: var(--primary)"><%= message.user %></h2>
+        </div>
+
+        <div style="margin-bottom: 1.5rem">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">
+            Message
+          </p>
+          <p
+            class="message-text"
+            style="
+              font-size: 1.2rem;
+              color: var(--text-main);
+              font-style: italic;
+            "
+          >
+            "<%= message.text %>"
+          </p>
+        </div>
+
+        <div>
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">
+            Timestamp
+          </p>
+          <p style="margin: 0; font-size: 0.95rem">
+            <%= message.added.toLocaleString() %>
+          </p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -38,6 +38,19 @@ app.post("/new", (req, res) => {
   res.redirect("/");
 });
 
+// 4. Message Detail Route (GET "/message/:id")
+app.get("/message/:id", (req, res) => {
+  const messageId = req.params.id;
+  const message = messages[messageId];
+
+  // If the message doesnt exist, send a 404
+  if (!message) {
+    return res.status(404).send("Message not found!");
+  }
+
+  res.render("message-detail", { title: "Message Details", message: message });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
