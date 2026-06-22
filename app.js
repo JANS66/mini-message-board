@@ -6,6 +6,7 @@ app.set("view engine", "ejs");
 
 // MIDDLEWARE: This lets Express parse data sent from HTML forms
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 const messages = [
   { text: "Hi there!", user: "Amando", added: new Date() },

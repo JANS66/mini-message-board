@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1><%= title %></h1>
-    
-    <a href="/new">Write a New Message</a>
-    <hr>
+    <div class="container">
+        <header>
+            <h1><%= title %></h1>
+            <a href="/new" class="btn">+ New Message</a>
+        </header>
 
-    <% messages.forEach(message => { %>
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-            <p><strong><%= message.user %>:</strong> <%= message.text %></p>
-            <small><%= message.added.toLocaleString() %></small>
-        </div>
-    <% }) %>
+        <main class="message-list">
+            <% messages.forEach(message => { %>
+                <div class="message-card">
+                    <div class="message-header">
+                        <span class="user-name"><%= message.user %></span>
+                        <span class="timestamp"><%= message.added.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></span>
+                    </div>
+                    <p class="message-text"><%= message.text %></p>
+                </div>
+            <% }) %>
+        </main>
+    </div>
 </body>
 </html>
