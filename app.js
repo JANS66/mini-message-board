@@ -1,4 +1,6 @@
+require("dotenv").config(); // Load environment variables
 const express = require("express");
+const db = require("./db"); // Import database pool
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -8,17 +10,22 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const messages = [
-  { text: "Hi there!", user: "Amando", added: new Date() },
-  { text: "Hello World!", user: "Charles", added: new Date() },
-];
+// 1. Index Route (GET "/") - Displays all messages from DB
+app.get("/", async (req, res) => {
+  try {
+    // Query the database, ordering by the 'added' date descending (newest first)
+    const { rows } = await db.query(
+      "SELECT * FROM messages ORDER BY added DESC",
+    );
 
-// 1. Index Route (GET "/") - Displays all messages
-app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Mini Messageboard",
-    messages: messages,
-  });
+    res.render("index", {
+      title: "Mini Messageboard",
+      messages: rows, // 'rows' is an array of objects matching DB columns
+    });
+  } catch (err) {
+    console.error("Error fetching messages:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // 2. New Message Form Route (GET "/new") - Displays the form
@@ -26,29 +33,47 @@ app.get("/new", (req, res) => {
   res.render("form", { title: "New Message" });
 });
 
-// 3. New Message Submit Route (POST "/new") - Handles form submission
-app.post("/new", (req, res) => {
-  const messageText = req.body.messageText;
-  const messageUser = req.body.messageUser;
+// 3. New Message Submit Route (POST "/new") - Inserts data into DB
+app.post("/new", async (req, res) => {
+  const { messageText, messageUser } = req.body;
 
-  // Add the new message to our array
-  messages.push({ text: messageText, user: messageUser, added: new Date() });
+  try {
+    // Parameterized query ($1, $2) prevents SQL Injection attacks
+    const insertQuery = `
+      INSERT INTO messages (message_text, username)
+      VALUES ($1, $2)
+    `;
+    await db.query(insertQuery, [messageText, messageUser]);
 
-  // Redirect the user back to the index page to see their message
-  res.redirect("/");
+    res.redirect("/");
+  } catch (err) {
+    console.error("Error saving message:", err);
+    res.status(500).send("Error saving your message.");
+  }
 });
 
-// 4. Message Detail Route (GET "/message/:id")
-app.get("/message/:id", (req, res) => {
+// 4. Message Detail Route (GET "/message/:id") - Fetches a single message by ID
+app.get("/message/:id", async (req, res) => {
   const messageId = req.params.id;
-  const message = messages[messageId];
 
-  // If the message doesnt exist, send a 404
-  if (!message) {
-    return res.status(404).send("Message not found!");
+  try {
+    const { rows } = await db.query("SELECT * FROM messages WHERE id = $1", [
+      messageId,
+    ]);
+    const message = rows[0]; // Take the first matching row
+
+    if (!message) {
+      return res.status(404).send("Message not found!");
+    }
+
+    res.render("message-detail", {
+      title: "Message Details",
+      message: message,
+    });
+  } catch (err) {
+    console.error("Error fetching message details:", err);
+    res.status(500).send("Internal Server Error");
   }
-
-  res.render("message-detail", { title: "Message Details", message: message });
 });
 
 app.listen(PORT, () => {
