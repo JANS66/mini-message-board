@@ -13,6 +13,18 @@
       </header>
 
       <main class="form-card">
+        <!-- Error Alert Summary -->
+        <% if (errors && errors.length > 0) { %>
+          <div class="error-banner">
+            <p class="error-banner-title">Please fix the following problems:</p>
+            <ul class="error-list">
+              <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+
         <form method="POST" action="/new">
           <div class="form-group">
             <label for="user">Your Name</label>
@@ -21,6 +33,7 @@
               id="user"
               name="messageUser"
               placeholder="e.g. Jane Doe"
+              value="<%= formData.messageUser || '' %>"
               required
             />
           </div>
@@ -32,7 +45,7 @@
               name="messageText"
               placeholder="What's on your mind?"
               required
-            ></textarea>
+            ><%= formData.messageText || '' %></textarea>
           </div>
 
           <div class="form-actions">
